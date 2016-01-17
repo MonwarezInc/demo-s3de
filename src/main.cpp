@@ -111,7 +111,7 @@ int main (int argc, char **argv)
 				throw;
 			}
 		}
-		Camera	camera(config.position,config.target,config.up);
+		S3DE::Camera	camera(config.position,config.target,config.up);
 		// maybe we should encapsulate timer 
 		unsigned int 	start		=	SDL_GetTicks();
 		unsigned int 	frametime	=	16;
@@ -120,7 +120,7 @@ int main (int argc, char **argv)
 		input.GrabCursor(true);
 		input.ShowCursor(false);	
 		
-		camera.setSpeed(0.1);
+		camera.SetSpeed(0.1);
 		// Adding some light
 		std::vector<LightData>					lightdata;
 		std::vector<S3DE::PointLight>			pointlight;
@@ -179,12 +179,12 @@ int main (int argc, char **argv)
 			engine.AttachLight(pointlight);
 
 			input.UpdateEvent();
-			camera.keyBoardEvent(input);	
-			camera.deplacer(input,elapsed);
+			camera.KeyBoardEvent(input);	
+			camera.Move(input,elapsed);
 			unsigned int begin = SDL_GetTicks();
 			// do graphical stuff
 			// do animation 
-			engine.SetCameraLocation(camera.GetPosition(),camera.GetPointCible(),config.up);
+			engine.SetCameraLocation(camera.GetPosition(),camera.GetTarget(),config.up);
 			engine.Init();
 			engine.Draw(totalTime);
 			elapsed = SDL_GetTicks() - begin;
