@@ -25,8 +25,8 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include <iostream>
-#include <S3DE/Engine-main.h>
-#include <S3DE/Mesh.h>
+#include <S3DE_Engine-main.h>
+#include <S3DE_Mesh.h>
 
 #include <cstdio>
 #include <cmath>
@@ -34,7 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "utils/MemoryManager.hpp"
 #include "utils/Interpolate.hpp"
 #include "utils/Loader.h"
-#include <S3DE/Camera.h>
+#include <S3DE_Camera.h>
 
 #define MAX_LIGHT 6 	// define this for now
 struct IdMesh
