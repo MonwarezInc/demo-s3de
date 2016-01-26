@@ -85,7 +85,11 @@ int main (int argc, char **argv)
 	try
 	{
 		config	=	loader.GetConfigData();
-		engine.CreateWindow(config.width,config.height,config.fullscreen,"Test Engine", 32, 2, 3,2);
+
+		S3DE::EngineShader	shaderFilename	=	{"./Shader/texture.vert","./Shader/texture.frag","",""};
+		S3DE::EngineWindow	windowConf	=	{config.width,config.height,config.fullscreen,"Test Engine",32,2,3,2,shaderFilename};
+		
+		engine.CreateWindow(windowConf);
 		engine.ClearColor(0.0,0.0,0.0,1.0);
 		engine.SetCameraSettings(70.0, (float)config.width/(float)config.height, 0.01, 10000);
 		engine.SetCameraLocation(config.position, config.target, config.up);
