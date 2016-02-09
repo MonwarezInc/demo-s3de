@@ -37,22 +37,22 @@ Loader::Loader()
 {
 	m_state	=	0;
 }
-void Loader::Load(string const &filename, Loader_Type type)
+void Loader::Load(string const &filename, LoaderType type)
 {
 	FileManager	file (filename, "r");
 	m_lastfilename =	filename;
 	switch (type)
 	{
-		case LOADER_CONFIG:
+		case LoaderType::CONFIG:
 			this->LoadConfig(file);
 			break;
-		case LOADER_MESH:
+		case LoaderType::MESH:
 			this->LoadMesh(file);
 			break;
-		case LOADER_LIGHT:
+		case LoaderType::LIGHT:
 			this->LoadLight(file);
 			break;
-		case LOADER_DYNAMICS:
+		case LoaderType::DYNAMICS:
 			this->LoadDynamics(file);
 			break;
 	}

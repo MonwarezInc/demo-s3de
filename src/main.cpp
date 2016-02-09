@@ -75,7 +75,7 @@ int main (int argc, char **argv)
 
 	try
 	{
-		loader.Load("./data/config",LOADER_CONFIG);
+		loader.Load("./data/config",LoaderType::CONFIG);
 	}
 	catch (string a)
 	{
@@ -94,7 +94,7 @@ int main (int argc, char **argv)
 		engine.SetCameraSettings(70.0, (float)config.width/(float)config.height, 0.01, 10000);
 		engine.SetCameraLocation(config.position, config.target, config.up);
 
-		loader.Load("./data/obj.dat",LOADER_MESH);
+		loader.Load("./data/obj.dat",LoaderType::MESH);
 		pmeshdata	=	loader.GetMeshData();	
 		BasicVectorManager<S3DE::Mesh>	mesh;
 		auto	nbModel	=	pmeshdata.size();
@@ -141,7 +141,7 @@ int main (int argc, char **argv)
 		std::vector<LinearInterpolate<float>>	posintlight;
 		try
 		{
-			loader.Load("./data/light.dat", LOADER_LIGHT);
+			loader.Load("./data/light.dat", LoaderType::LIGHT);
 			lightdata	=	loader.GetLightData();
 			size_t	nlights	=	lightdata.size();
 			for (size_t i = 0; i < nlights && i < MAX_LIGHT; ++i)

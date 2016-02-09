@@ -30,8 +30,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <glm/glm.hpp>
 #include <cstdio>
 #include <string>
-enum Loader_Type
-{ LOADER_CONFIG, LOADER_MESH, LOADER_LIGHT, LOADER_DYNAMICS };
+enum class LoaderType: char
+{ CONFIG, MESH, LIGHT, DYNAMICS };
 struct 	ConfigData
 {
 	glm::vec3		position;
@@ -70,7 +70,7 @@ class	Loader
 {
 	public:
 		Loader ();
-		void					Load(std::string const &filename, Loader_Type type);
+		void					Load(std::string const &filename, LoaderType type);
 		ConfigData				GetConfigData();
 		std::vector<MeshData>	GetMeshData();
 		std::vector<LightData> 	GetLightData();
