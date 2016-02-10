@@ -35,6 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "utils/Interpolate.hpp"
 #include "utils/Loader.h"
 #include <S3DE_Camera.h>
+#include <S3DE_CEntity.h>
 
 #define MAX_LIGHT 6 	// define this for now
 struct IdMesh
@@ -56,6 +57,8 @@ int main (int argc, char **argv)
 	cout << "Test engine " << endl;
 	
 	S3DE::CEngine	engine;
+	
+	S3DE::RcRequest	rcrequest; // signals for rcrequest need to be set to the loadRessource
 
 	// Input
 	CInput	input;
