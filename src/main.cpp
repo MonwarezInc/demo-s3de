@@ -58,8 +58,6 @@ int main (int argc, char **argv)
 	
 	S3DE::CEngine	engine;
 	
-	S3DE::RcRequest	rcrequest; // signals for rcrequest need to be set to the loadRessource
-
 	// Input
 	CInput	input;
 
