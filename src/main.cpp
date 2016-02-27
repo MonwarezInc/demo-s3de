@@ -37,7 +37,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <S3DE_Camera.h>
 #include <S3DE_CEntity.h>
 
-#define MAX_LIGHT 6 	// define this for now
+#define MAX_LIGHT 	6 	// define this for now
+#define	MAX_SPOT	2
 struct IdMesh
 {
 	IdMesh()
@@ -51,9 +52,6 @@ struct IdMesh
 using namespace std;
 int main (int argc, char **argv)
 {
-	(void) argc;
-	(void) argv;
-
 	cout << "Test engine " << endl;
 	
 	S3DE::CEngine	engine;
@@ -140,6 +138,7 @@ int main (int argc, char **argv)
 		std::vector<LightData>					lightdata;
 		std::vector<S3DE::PointLight>			pointlight;
 		std::vector<LinearInterpolate<float>>	posintlight;
+		std::vector<S3DE::SpotLight>			spotlight;
 		try
 		{
 			loader.Load("./data/light.dat", LoaderType::LIGHT);
@@ -173,6 +172,19 @@ int main (int argc, char **argv)
 				posintlight.back().SetLooped(true);
 				pointlight.push_back(pl);
 			}
+			// Spot Light one for now
+			glm::vec3	unit		=	glm::vec3(-1,5,-2);
+			S3DE::SpotLight	sl;
+			sl.Color				=	glm::vec3(1.0,1.0,0.0);
+			sl.AmbientIntensity		=	0.2;
+			sl.DiffuseIntensity		=	0.4;
+			sl.Attenuation.Constant	=	1.0;
+			sl.Attenuation.Linear	=	0.001;
+			sl.Attenuation.Exp		=	0.005;
+			sl.Direction			=	unit;
+			sl.Cutoff				=	M_PI/16.0;
+			sl.Position				=	glm::vec3(-20,50,35);
+			spotlight.push_back(sl);
 		}
 		catch(string const &err)
 		{
@@ -180,6 +192,7 @@ int main (int argc, char **argv)
 			std::cerr << err << std::endl;
 		}
 		engine.AttachLight(pointlight);
+		engine.AttachLight(spotlight);
 		// End adding some light
 		float	t	=	0;
 		while (!input.terminer())

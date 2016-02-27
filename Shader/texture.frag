@@ -1,8 +1,8 @@
 //GLSL version
 #version 150
 #extension GL_ARB_explicit_attrib_location : require
-const int MAX_POINT_LIGHTS = 6;
-
+const int MAX_POINT_LIGHTS 	= 	6;
+const int MAX_SPOT_LIGHTS	=	2;
 //Input 
 
 in vec2 coordTexture;
@@ -33,8 +33,17 @@ struct	PointLight
 	vec3		Position;
 	Attenuation	Atten;
 };
+struct	SpotLight
+{
+	PointLight	Base;
+	vec3		Direction;
+	float		Cutoff;
+};
+
 uniform int 				NumPointLights;
-uniform PointLight			PointLights[MAX_POINT_LIGHTS];			
+uniform	int					NumSpotLights;
+uniform PointLight			PointLights[MAX_POINT_LIGHTS];
+uniform	SpotLight			SpotLights[MAX_SPOT_LIGHTS];
 uniform DirectionalLight 	directionalLight;
 uniform vec3				eyeWorldPos;
 uniform float				matSpecularIntensity;
@@ -72,27 +81,44 @@ vec4 	CalcDirectionalLight(vec3 Normal)
 {
 	return CalcLightInternal(directionalLight.Base, directionalLight.Direction, Normal);
 }
-vec4	CalcPointLight(int Index, vec3 Normal)
+vec4	CalcPointLight(PointLight pl, vec3 Normal)
 {
-	vec3	LightDirection	=	WorldPos0 - PointLights[Index].Position;
+	vec3	LightDirection	=	WorldPos0 - pl.Position;
 	float	Distance		=	length(LightDirection);
 	LightDirection			=	normalize(LightDirection);
-	vec4	Color			=	CalcLightInternal(PointLights[Index].Base, LightDirection, Normal);
-	float	atten			=	PointLights[Index].Atten.Constant +
-								PointLights[Index].Atten.Linear * Distance +
-								PointLights[Index].Atten.Exp * Distance * Distance;
+	vec4	Color			=	CalcLightInternal(pl.Base, LightDirection, Normal);
+	float	atten			=	pl.Atten.Constant +
+								pl.Atten.Linear * Distance +
+								pl.Atten.Exp * Distance * Distance;
 	return	Color/atten;	
 }
-// Fonction main
+vec4	CalcSpotLight(SpotLight	sl, vec3 Normal)
+{
+	vec3	LightToPixel	=	normalize(WorldPos0 - sl.Base.Position);
+	float	SpotFactor		=	dot(LightToPixel, sl.Direction);
+	
+	if (SpotFactor > sl.Cutoff)
+	{
+		vec4	Color	=	CalcPointLight(sl.Base, Normal);
+		return	Color * (1.0 - (1.0 - SpotFactor)* 1.0/(1.0 - sl.Cutoff));
+	}
+	else
+		return	vec4(0.0,0.0,0.0,0.0);
+}
 
 void main()
 {
 	vec3 	Normal		=	normalize(Normal0);
-	vec4	TotalLight	=	CalcDirectionalLight(Normal);
+	vec4	TotalLight	=	vec4(0.0,0.0,0.0,0.0);
+	// Directional light part
+	//TotalLight		+=	CalcDirectionalLight(Normal);
+	// point light part
 	for	(int i = 0; i < NumPointLights  && i < MAX_POINT_LIGHTS; ++i)
-	{
-		TotalLight +=	CalcPointLight(i, Normal);
-	}
+		TotalLight +=	CalcPointLight(PointLights[i], Normal);
+	// spot light part
+	for (int i = 0; (i < NumSpotLights) && (i < MAX_SPOT_LIGHTS); ++i)
+		TotalLight	+= CalcSpotLight(SpotLights[i], Normal);
+
 	out_Color	=	texture2D(text,coordTexture.xy)*TotalLight;
 	
 }
