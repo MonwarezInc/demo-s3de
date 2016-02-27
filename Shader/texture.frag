@@ -111,7 +111,7 @@ void main()
 	vec3 	Normal		=	normalize(Normal0);
 	vec4	TotalLight	=	vec4(0.0,0.0,0.0,0.0);
 	// Directional light part
-	//TotalLight		+=	CalcDirectionalLight(Normal);
+	TotalLight		+=	CalcDirectionalLight(Normal);
 	// point light part
 	for	(int i = 0; i < NumPointLights  && i < MAX_POINT_LIGHTS; ++i)
 		TotalLight +=	CalcPointLight(PointLights[i], Normal);
