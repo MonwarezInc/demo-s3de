@@ -214,7 +214,31 @@ int main (int argc, char **argv)
 			// do animation 
 			engine.SetCameraLocation(camera.GetPosition(),camera.GetTarget(),config.up);
 			engine.Init();
-			engine.Draw(totalTime);
+			try
+			{
+				engine.Draw(totalTime);
+			}
+			catch(S3DE::MeshException const & me)
+			{
+				auto	re	=	me.GetResourceExcept();
+				std::cerr << "Exception caught: " << me.what() << std::endl;
+				switch(re.flag)
+				{
+					case	S3DE::MeshExceptFlag::FATAL:
+						throw me;
+						break;
+					case	S3DE::MeshExceptFlag::RELEASE:
+						// Do somethings
+						std::cerr << "Release the node mesh id:" << re.id << std::endl;
+						engine.DelMeshNode(re.id);
+						if (re.id < vIDMesh.size())
+							vIDMesh[re.id].isGood	=	false;
+						break;
+					default:
+						throw me;
+				}
+					
+			}
 			elapsed = SDL_GetTicks() - begin;
 			if (elapsed < frametime)
 				{
@@ -229,11 +253,15 @@ int main (int argc, char **argv)
 	}
 	catch(string const &a)
 	{
-		std::cerr << "Error"<<std::endl << a << std::endl;
+		std::cerr << "Error of type string received"<<std::endl << a << std::endl;
 	}
-	catch(...)
+	catch(exception * e)
 	{
-		std::cerr << "unexpected error " << std::endl;
+		std::cerr << e->what()<< std::endl;
+	}
+	catch (...)
+	{
+		std::cerr << "Unknow type of error" << std::endl;
 	}
 	return EXIT_SUCCESS;
 }
