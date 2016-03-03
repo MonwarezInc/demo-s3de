@@ -32,7 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cmath>
 #include <sstream>
 #include "utils/MemoryManager.hpp"
-#include "utils/Interpolate.hpp"
+#include <S3DE_Interpolate.hpp>
 #include "utils/Loader.h"
 #include <S3DE_Camera.h>
 #include <S3DE_CEntity.h>
@@ -135,10 +135,10 @@ int main (int argc, char **argv)
 		
 		camera.SetSpeed(0.1);
 		// Adding some light
-		std::vector<LightData>					lightdata;
-		std::vector<S3DE::PointLight>			pointlight;
-		std::vector<LinearInterpolate<float>>	posintlight;
-		std::vector<S3DE::SpotLight>			spotlight;
+		std::vector<LightData>						lightdata;
+		std::vector<S3DE::PointLight>				pointlight;
+		std::vector<S3DE::LinearInterpolate<float>>	posintlight;
+		std::vector<S3DE::SpotLight>				spotlight;
 		try
 		{
 			loader.Load("./data/light.dat", LoaderType::LIGHT);
@@ -156,11 +156,11 @@ int main (int argc, char **argv)
 				if (lightdata[i].controltype	==	"linear")
 				{
 					size_t controlpoint	=	lightdata[i].vControlPoint.size();
-					posintlight.push_back(LinearInterpolate<float>());
+					posintlight.push_back(S3DE::LinearInterpolate<float>());
 					for (size_t j = 0; j < controlpoint; ++j)
 					{
 						auto vec	=	lightdata[i].vControlPoint[j].position;
-						Position3D<float>	position(vec.x,vec.y,vec.z);
+						glm::vec3	position(vec.x,vec.y,vec.z);
 						posintlight.back().AddPoint(position, lightdata[i].vControlPoint[j].time);
 					}
 				}
@@ -201,8 +201,8 @@ int main (int argc, char **argv)
 			for (size_t i = 0; i < numLight; ++i)
 			{
 				// Apply Interpolated curve position
-				Position3D<float>	lightpos	=	posintlight[i].GetInterpolated(totalTime);
-				pointlight[i].Position	=	glm::vec3(lightpos.x,lightpos.y,lightpos.z);	
+				auto	lightpos	=	posintlight[i].GetInterpolated(totalTime);
+				pointlight[i].Position	=	lightpos;	
 			}
 			engine.AttachLight(pointlight);
 

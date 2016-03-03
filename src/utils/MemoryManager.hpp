@@ -50,6 +50,10 @@ class BasicVectorManager
 			for (size_t i=0; i < nb;++i)
 				m_pVect[i]	=	std::make_unique<T>();
 		}
+		virtual	size_t	GetSize()
+		{
+			return	m_pVect.size();
+		}
 		virtual	void	Release()
 		{
 			m_pVect.clear();
