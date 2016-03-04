@@ -30,6 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <glm/glm.hpp>
 #include <cstdio>
 #include <string>
+#include <fstream>
 enum class LoaderType: char
 { CONFIG, MESH, LIGHT, DYNAMICS };
 struct 	ConfigData
@@ -75,7 +76,10 @@ class	Loader
 		std::vector<MeshData>	GetMeshData();
 		std::vector<LightData> 	GetLightData();
 	protected:
-		void	LoadConfig(FileManager &file);
+		void	Find3uple(std::string str, float &x, float &y, float &z, std::string const &sep=",");
+		void	FindCouple(std::string str, unsigned long &a, unsigned long &b, std::string const &sep=",");
+		size_t	ExtractMatch(std::string const &in, std::string &out, std::string const &start="(", std::string const &end=")");
+		void	LoadConfig();
 		void	LoadMesh(FileManager &file);
 		void 	LoadLight(FileManager &file);
 		void	LoadDynamics(FileManager &file);

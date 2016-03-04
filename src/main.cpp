@@ -201,11 +201,11 @@ int main (int argc, char **argv)
 		engine.AttachLight(spotlight);
 		// End adding some light
 		float	t	=	0;
-		while (!input.terminer())
+		while (!input.terminer()) 
 		{
-			if (vIDMesh.size() > 10)
+			if (vIDMesh.size() > 9)
 			{
-				vIDMesh[10].pitch	=	glm::vec3(t,0,0);
+				vIDMesh[9].pitch	=	glm::vec3(t,0,0);
 			}
 			for (auto & meshid: vIDMesh)
 			{
