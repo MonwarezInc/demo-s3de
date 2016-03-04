@@ -1,4 +1,4 @@
-models 10
+models 11
 ../data/cobra.md2 position(-10,50,10) rotate(90,0,0) scale(0.2)
 ../data/girl/girl.3ds position(0,-10,10) rotate(0,0,0) scale(0.2)
 ../data/Ruins/CathedralRuins_01/CathedralRuins_01.dae position(0,0,0) rotate(0,0,0) scale(1)
@@ -9,3 +9,4 @@ models 10
 ../data/bob_lamp/bob_lamp_update_export.md5mesh position(-30,50,10) rotate(0,0,0) scale(1)
 ../demo-data/data/table/table.obj position(-30,40,11) rotate(0,0,90) scale(1)
 ../data/someguy/playerNormal2.dae position(-30,60,11) rotate(0,0,0) scale(1)
+../demo-data/data/ball/ball.obj position(-25,65,11) rotate(0,0,0) scale(1)

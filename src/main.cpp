@@ -48,6 +48,9 @@ struct IdMesh
 	}
 	unsigned	int	id;
 	bool			isGood;
+	glm::vec3	position;
+	glm::vec3	pitch;
+	float		scale;
 };
 using namespace std;
 int main (int argc, char **argv)
@@ -109,9 +112,12 @@ int main (int argc, char **argv)
 				engine.AddMeshNode(mesh_ptr, id);
 				vIDMesh[i].id		=	id;
 				vIDMesh[i].isGood	=	true;
+				vIDMesh[i].position	=	pmeshdata[i].position;
+				vIDMesh[i].pitch	=	pmeshdata[i].pitch;
+				vIDMesh[i].scale	=	pmeshdata[i].scale;
 
-				engine.SetNodePosRot(vIDMesh[i].id, pmeshdata[i].position, pmeshdata[i].pitch);
-				engine.SetNodeScale(vIDMesh[i].id, pmeshdata[i].scale);
+				engine.SetNodePosRot(vIDMesh[i].id, vIDMesh[i].position, vIDMesh[i].pitch);
+				engine.SetNodeScale(vIDMesh[i].id, vIDMesh[i].scale);
 			}
 			catch(std::string const & a)
 			{
@@ -197,6 +203,15 @@ int main (int argc, char **argv)
 		float	t	=	0;
 		while (!input.terminer())
 		{
+			if (vIDMesh.size() > 10)
+			{
+				vIDMesh[10].pitch	=	glm::vec3(t,0,0);
+			}
+			for (auto & meshid: vIDMesh)
+			{
+				engine.SetNodePosRot(meshid.id, meshid.position, meshid.pitch);
+				engine.SetNodeScale(meshid.id, meshid.scale);
+			}
 			auto numLight	=	pointlight.size();
 			for (size_t i = 0; i < numLight; ++i)
 			{
