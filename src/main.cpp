@@ -60,13 +60,13 @@ int main (int argc, char **argv)
 	S3DE::CEngine	engine;
 	
 	// Input
-	CInput	input;
+	S3DE::CInput	input;
 
 	// loader system
-	Loader	loader;
+	S3DE::Loader	loader;
 	// Some struct for loader system
- 	ConfigData			config;
-	vector<MeshData>	pmeshdata;
+ 	S3DE::ConfigData		config;
+	vector<S3DE::MeshData>	pmeshdata;
 	// Set some default
 	config.position		=	glm::vec3(350,200,300);
 	config.target		=	glm::vec3(2,5,0);
@@ -77,7 +77,7 @@ int main (int argc, char **argv)
 
 	try
 	{
-		loader.Load("./data/config",LoaderType::CONFIG);
+		loader.Load("./data/config",S3DE::LoaderType::CONFIG);
 	}
 	catch (string a)
 	{
@@ -96,7 +96,7 @@ int main (int argc, char **argv)
 		engine.SetCameraSettings(70.0, (float)config.width/(float)config.height, 0.01, 10000);
 		engine.SetCameraLocation(config.position, config.target, config.up);
 
-		loader.Load("./data/obj.dat",LoaderType::MESH);
+		loader.Load("./data/obj.dat",S3DE::LoaderType::MESH);
 		pmeshdata	=	loader.GetMeshData();	
 		BasicVectorManager<S3DE::Mesh>	mesh;
 		auto	nbModel	=	pmeshdata.size();
@@ -141,13 +141,13 @@ int main (int argc, char **argv)
 		
 		camera.SetSpeed(0.1);
 		// Adding some light
-		std::vector<LightData>						lightdata;
+		std::vector<S3DE::LightData>				lightdata;
 		std::vector<S3DE::PointLight>				pointlight;
 		std::vector<S3DE::LinearInterpolate<float>>	posintlight;
 		std::vector<S3DE::SpotLight>				spotlight;
 		try
 		{
-			loader.Load("./data/light.dat", LoaderType::LIGHT);
+			loader.Load("./data/light.dat", S3DE::LoaderType::LIGHT);
 			lightdata	=	loader.GetLightData();
 			size_t	nlights	=	lightdata.size();
 			for (size_t i = 0; i < nlights && i < MAX_LIGHT; ++i)

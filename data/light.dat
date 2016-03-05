@@ -1,4 +1,4 @@
-lights 3
+#lights 3
 color(1.0,1.0,0.0) ambiant(0.2) diffuse(0.9) linear(0.001) constant(1.0) exp(0.005)
 controlpoint(6) linear
 position(10,0,30) timemill(2000)

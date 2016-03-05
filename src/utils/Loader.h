@@ -26,69 +26,68 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #ifndef LOADER_HEADER_INCLUED_H
 #define LOADER_HEADER_INCLUED_H
-#include "FileManager.h"
 #include <glm/glm.hpp>
-#include <cstdio>
 #include <string>
 #include <fstream>
-enum class LoaderType: char
-{ CONFIG, MESH, LIGHT, DYNAMICS };
-struct 	ConfigData
+#include <vector>
+namespace S3DE
 {
-	glm::vec3		position;
-	glm::vec3		target;
-	glm::vec3		up;
+	enum class LoaderType: char
+	{ CONFIG, MESH, LIGHT, DYNAMICS };
+	struct 	ConfigData
+	{
+		glm::vec3		position;
+		glm::vec3		target;
+		glm::vec3		up;
 	
-	unsigned	int	width;
-	unsigned	int	height;
-	bool			fullscreen;
-};
-// MeshData is for one mesh
-struct 	MeshData
-{
-	std::string 	filename;
-	glm::vec3		position;
-	glm::vec3		pitch;
-	float			scale;
-};
-struct	ControlPoint
-{
-	glm::vec3					position;
-	float						time;	
-};
-struct 	LightData
-{
-	glm::vec3					color;
-	float						ambient;
-	float						diffuse;
-	float						linear;
-	float						constant;
-	float						exp;
-	std::string					controltype;
-	std::vector<ControlPoint>	vControlPoint;
-};
-class	Loader
-{
-	public:
-		Loader ();
-		void					Load(std::string const &filename, LoaderType type);
-		ConfigData				GetConfigData();
-		std::vector<MeshData>	GetMeshData();
-		std::vector<LightData> 	GetLightData();
-	protected:
-		void	Find3uple(std::string str, float &x, float &y, float &z, std::string const &sep=",");
-		void	FindCouple(std::string str, unsigned long &a, unsigned long &b, std::string const &sep=",");
-		size_t	ExtractMatch(std::string const &in, std::string &out, std::string const &start="(", std::string const &end=")");
-		void	LoadConfig();
-		void	LoadMesh(FileManager &file);
-		void 	LoadLight(FileManager &file);
-		void	LoadDynamics(FileManager &file);
-		void	ClearState(unsigned char mask);
+		unsigned	int	width;
+		unsigned	int	height;
+		bool			fullscreen;
+	};
+	// MeshData is for one mesh
+	struct 	MeshData
+	{
+		std::string 	filename;
+		glm::vec3		position;
+		glm::vec3		pitch;
+		float			scale;
+	};
+	struct	ControlPoint
+	{
+		glm::vec3					position;
+		float						time;	
+	};
+	struct 	LightData
+	{
+		glm::vec3					color;
+		float						ambient;
+		float						diffuse;
+		float						linear;
+		float						constant;
+		float						exp;
+		std::string					controltype;
+		std::vector<ControlPoint>	vControlPoint;
+	};
+	class	Loader
+	{
+		public:
+			Loader ();
+			void					Load(std::string const &filename, LoaderType type);
+			ConfigData				GetConfigData();
+			std::vector<MeshData>	GetMeshData();
+			std::vector<LightData> 	GetLightData();
+		protected:
+			void	LoadConfig();
+			void	LoadMesh();
+			void 	LoadLight();
+			void	LoadDynamics();
+			void	ClearState(unsigned char mask);
 
-		std::string				m_lastfilename;
-		unsigned char			m_state;
-		ConfigData				m_config;
-		std::vector<MeshData>	m_pMesh;
-		std::vector<LightData>	m_vLight;	
-};
+			std::string				m_lastfilename;
+			unsigned char			m_state;
+			ConfigData				m_config;
+			std::vector<MeshData>	m_pMesh;
+			std::vector<LightData>	m_vLight;	
+	};
+}
 #endif

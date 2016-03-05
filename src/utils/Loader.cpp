@@ -27,10 +27,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Loader.h"
 #include <fstream>
 #include <iostream>
-
+#include <S3DE_Parser.h>
 using std::string;
 using std::fscanf;
 using std::vector;
+using namespace S3DE;
 // Some Bits operation define
 #define CONFIG_MASK	1		//	00000001
 #define MESH_MASK 	2		//	00000010
@@ -42,7 +43,6 @@ Loader::Loader()
 }
 void Loader::Load(string const &filename, LoaderType type)
 {
-	FileManager	file (filename, "r");
 	m_lastfilename =	filename;
 	switch (type)
 	{
@@ -50,51 +50,15 @@ void Loader::Load(string const &filename, LoaderType type)
 			this->LoadConfig();
 			break;
 		case LoaderType::MESH:
-			this->LoadMesh(file);
+			this->LoadMesh();
 			break;
 		case LoaderType::LIGHT:
-			this->LoadLight(file);
+			this->LoadLight();
 			break;
 		case LoaderType::DYNAMICS:
-			this->LoadDynamics(file);
+			this->LoadDynamics();
 			break;
 	}
-}
-void Loader::Find3uple(std::string buf, float &x, float &y, float &z, std::string const &sep)
-{
-	auto i1	=	buf.find(sep);
-	if ((i1 == std::string::npos) || (i1 == 0))
-		throw string ("Error could not get the first parameter of 3-uple");
-	auto	substr1	=	buf.substr(0,i1);
-	buf = buf.substr(i1+1);
-	x	=	std::stof(substr1);
-	i1	=	buf.find(sep);
-	if ((i1 == std::string::npos) || (i1 == 0))
-		throw string ("Error could not get the second parameter of 3-uple");
-	substr1	=	buf.substr(0,i1);
-	y	=	std::stof(substr1);
-	buf = buf.substr(i1+1);
-	z	=	std::stof(buf);	
-}
-void Loader::FindCouple(std::string buf, unsigned long &a, unsigned long &b, std::string const &sep)
-{
-	auto i1	=	buf.find(sep);
-	if ((i1 == std::string::npos) || (i1 == 0))
-		throw string ("Error could not get the first parameter of 3-uple");
-	auto	substr1	=	buf.substr(0,i1);
-	buf = buf.substr(i1+1);
-	a	=	std::stoul(substr1);
-	b	=	std::stoul(buf);
-}
-size_t Loader::ExtractMatch(std::string const &in, std::string &out, std::string const &start, std::string const &end)
-{
-	
-		auto	i1	=	in.find(start);
-		auto i2	=	in.find(end);
-		if ((i1 == std::string::npos) || (i2 == std::string::npos) || i1 > i2)
-			throw string("Error , ") + start + string(" or") + end + string("  are not match");
-		out	=	in.substr(i1+1,i2-i1-1);
-	return	i2;
 }
 void Loader::LoadConfig()
 {
@@ -110,37 +74,37 @@ void Loader::LoadConfig()
 			throw string("Error configuration file at first line");
 
 		std::string	substr1;
-		auto	i2	=	this->ExtractMatch(buf,substr1);
-		this->Find3uple(substr1,x,y,z);
+		auto	i2	=	Parser::ExtractMatch(buf,substr1);
+		Parser::Find3uple(substr1,x,y,z);
 		buf	=	buf.substr(i2+1);	
 		
 		i1	=	buf.find("target");
 		if (i1	==	std::string::npos)
 			throw string("Error configuration file at first line");
 		buf	=	buf.substr(i1);
-		i2		=	this->ExtractMatch(buf,substr1);
-		this->Find3uple(substr1,u,v,w);
+		i2		=	Parser::ExtractMatch(buf,substr1);
+		Parser::Find3uple(substr1,u,v,w);
 		
 		buf	=	buf.substr(i2+1);
 		i1	=	buf.find("up");
 		if (i1	==	std::string::npos)
 			throw string("Error configuration file at first line");
-		this->ExtractMatch(buf,substr1);
-		this->Find3uple(substr1,a,b,c);
+		Parser::ExtractMatch(buf,substr1);
+		Parser::Find3uple(substr1,a,b,c);
 
 		std::getline(input,buf);
 		i1	=	buf.find("resolution");
 		if (i1	==	std::string::npos)
 			throw string("Error configuration file at first line");
-		this->ExtractMatch(buf,substr1);
+		Parser::ExtractMatch(buf,substr1);
 		unsigned long	width,height;
-		this->FindCouple(substr1,width,height);
+		Parser::FindCouple(substr1,width,height);
 
 		std::getline(input,buf);
 		i1	=	buf.find("fullscreen");
 		if (i1	==	std::string::npos)
 			throw string("Error configuration file at first line");
-		this->ExtractMatch(buf,substr1);
+		Parser::ExtractMatch(buf,substr1);
 		auto	fullscreen	=	std::stoul(substr1);
 
 		// Now we can store the config
@@ -154,99 +118,187 @@ void Loader::LoadConfig()
 		m_state				|=	CONFIG_MASK;									
 	}
 }
-void Loader::LoadMesh(FileManager & file)
+void Loader::LoadMesh()
 {
 	std::ifstream	input(m_lastfilename.c_str());
 	this->ClearState(MESH_MASK);
 	m_pMesh.clear();
 
 	string error	=	string("error during loading meshfile: ") + m_lastfilename;
-	auto fileptr	=	file.GetFilePtr();
-
-	unsigned int	n;
-	auto ret	=	fscanf(fileptr,"models %u\n",&n);
-	if (ret != 1)
-		throw error;
-	m_pMesh.resize(n);
-	for (unsigned int i = 0; i < n; ++i)
+	if (input.is_open())
 	{
-		char	name[256];
-		float	x,y,z,u,v,w,f;
-		ret	=	fscanf(fileptr,"%255s position(%f,%f,%f) rotate(%f,%f,%f) scale(%f)",name,&x,&y,&z,
-						&u,&v,&w,&f);
-		if (ret != 8)
-			throw error;
-		fscanf(fileptr,"\n");
-		m_pMesh[i].filename	=	name;
-		m_pMesh[i].position	=	glm::vec3(x,y,z);
-		m_pMesh[i].pitch	=	glm::vec3(glm::radians(u),glm::radians(v),glm::radians(w));
-		m_pMesh[i].scale	=	f;
+		std::string buf;
+		do
+		{
+			std::getline(input,buf);
+			buf	=	buf.substr(0,buf.find("#"));
+			if (buf.length() != 0)
+			{
+				auto	i1		=	buf.find(" ");
+				if ((i1 == std::string::npos) || (i1 == 0))
+					throw error;
+				auto	substr	=	buf.substr(0,i1);
+				auto	name	=	substr;
+
+				buf	=	buf.substr(i1);
+				i1	=	buf.find("position");
+				if (i1 == std::string::npos)
+					throw error;
+				buf	=	buf.substr(i1);
+				auto i2	=	Parser::ExtractMatch(buf,substr);
+				float x,y,z,u,v,w,f;
+				Parser::Find3uple(substr,x,y,z);
+				buf	=	buf.substr(i2+1);
+				
+				i1	=	buf.find("rotate");
+				if (i1 == std::string::npos)
+					throw error;
+				buf	=	buf.substr(i1);
+				i2	=	Parser::ExtractMatch(buf,substr);
+				Parser::Find3uple(substr,u,v,w);
+				buf	=	buf.substr(i2+1);
+			
+				i1	=	buf.find("scale");
+				if (i1 == std::string::npos)
+					throw error;
+				buf	=	buf.substr(i1);
+				Parser::ExtractMatch(buf,substr);
+				f	=	std::stof(substr);
+				
+				m_pMesh.push_back(MeshData());
+				m_pMesh.back().filename	=	name;
+				m_pMesh.back().position	=	glm::vec3(x,y,z);
+				m_pMesh.back().pitch	=	glm::vec3(glm::radians(u),glm::radians(v),glm::radians(w));
+				m_pMesh.back().scale	=	f;
+				
+				// Everything goes well
+				m_state	|= MESH_MASK;
+			}
+		}while (!input.eof());
 	}
-	// Everything goes well
-	m_state	|= MESH_MASK;
 }
-void Loader::LoadLight(FileManager & file)
+void Loader::LoadLight()
 {
 	std::ifstream	input(m_lastfilename.c_str());
 	this->ClearState(LIGHT_MASK);
 	m_vLight.clear();
 
 	string	error	=	string("error during loading lights file: ") + m_lastfilename;
-	
-	auto	fileptr	=	file.GetFilePtr();	
-
-	unsigned int	n;
-	auto ret	=	fscanf(fileptr, "lights %u\n",&n);
-	if (ret != 1)
-		throw error;
-	m_vLight.resize(n);
-	for (size_t i = 0; i < n ; ++i)
+	if (input.is_open())
 	{
-		float x,y,z,r,g,b,a,d,c,l,e;
-		unsigned int controlpoint;
-		char	curvetype[256];
-		ret	=	fscanf(fileptr,
-						"color(%f,%f,%f) ambiant(%f) diffuse(%f) linear(%f) constant(%f) exp(%f)\n",
-						&r,&g,&b,&a,&d,&l,&c,&e);
-		if (ret != 8)
-			throw error;
-		// Set the data in m_vLight
-		m_vLight[i].color	=	glm::vec3(r,g,b);
-		m_vLight[i].ambient	=	a;
-		m_vLight[i].diffuse	=	d;
-		m_vLight[i].linear	=	l;
-		m_vLight[i].constant=	c;
-		m_vLight[i].exp		=	e;
-
-		ret	=	fscanf(fileptr, "controlpoint(%u) %255s\n", &controlpoint, curvetype);
-		if (ret != 2)
-			throw error;
-		string	scurvetype	=	curvetype;
-		m_vLight[i].vControlPoint.resize(controlpoint);
-		m_vLight[i].controltype	=	scurvetype;
-		if (scurvetype	==	"linear")
+		std::string buf;
+		std::string	controltype	=	"unknow";
+		do
 		{
-			for (size_t j = 0; j < controlpoint; ++j)
+			std::getline(input,buf);
+			buf	=	buf.substr(0,buf.find("#"));
+			auto i1 = buf.find("color");
+			auto j1	= buf.find("controlpoint");
+			auto k1	= buf.find("position");
+			if ((buf.length() != 0) && (i1 != std::string::npos))
 			{
-				float time;
-				ret	=	fscanf(fileptr,"position(%f,%f,%f) timemill(%f)",&x,&y,&z,&time);
-				fscanf(fileptr,"\n"); 
-				if (ret != 4)
+				controltype	=	"unknow"; // Reset controltype
+				if (i1 == std::string::npos)
 					throw error;
-				// Set the data in vControlPoint
-				m_vLight[i].vControlPoint[j].position	=	glm::vec3(x,y,z);
-				m_vLight[i].vControlPoint[j].time		=	time;
-			}	
-		}
-		else	// Do nothing
-		{
+				buf	=	buf.substr(i1);
+				std::string	substr;
+				auto	i2	=	Parser::ExtractMatch(buf,substr);
+				float r,g,b,a,d,c,l,e;
+				Parser::Find3uple(substr,r,g,b);
+				buf	=	buf.substr(i2+1);
+
+				i1 = buf.find("ambiant");
+				if (i1 == std::string::npos)
+					throw error;
+				buf	=	buf.substr(i1);
+				i2	=	Parser::ExtractMatch(buf,substr);
+				a	=	std::stof(substr);
+				buf	=	buf.substr(i2+1);
+				
+				i1 = buf.find("diffuse");
+				if (i1 == std::string::npos)
+					throw error;
+				buf	=	buf.substr(i1);
+				i2	=	Parser::ExtractMatch(buf,substr);
+				d	=	std::stof(substr);
+				buf	=	buf.substr(i2+1);
+
+				i1 = buf.find("linear");
+				if (i1 == std::string::npos)
+					throw error;
+				buf	=	buf.substr(i1);
+				i2	=	Parser::ExtractMatch(buf,substr);
+				l	=	std::stof(substr);
+				buf	=	buf.substr(i2+1);
+
+				i1 = buf.find("constant");
+				if (i1 == std::string::npos)
+					throw error;
+				buf	=	buf.substr(i1);
+				i2	=	Parser::ExtractMatch(buf,substr);
+				c	=	std::stof(substr);
+				buf	=	buf.substr(i2+1);
+
+				i1 = buf.find("exp");
+				if (i1 == std::string::npos)
+					throw error;
+				buf	=	buf.substr(i1);
+				i2	=	Parser::ExtractMatch(buf,substr);
+				e	=	std::stof(substr);
+				buf	=	buf.substr(i2+1);
 			
+				// Set the data in m_vLight
+				m_vLight.push_back(LightData());
+				m_vLight.back().color	=	glm::vec3(r,g,b);
+				m_vLight.back().ambient	=	a;
+				m_vLight.back().diffuse	=	d;
+				m_vLight.back().linear	=	l;
+				m_vLight.back().constant=	c;
+				m_vLight.back().exp		=	e;
+			}
+			else if ((buf.length() != 0) && (j1 != std::string::npos))
+			{
+				if (buf.find("linear") != std::string::npos)
+					controltype	=	"linear";
+				else
+					controltype	=	"unknow";
+				m_vLight.back().controltype	=	controltype;	
+			}
+			else if ((buf.length() != 0) && (k1 != std::string::npos))
+			{
+				if (controltype	==	"linear")
+				{
+					float time,x,y,z;
+					buf	=	buf.substr(k1);
+					std::string	substr;
+					auto k2	=	Parser::ExtractMatch(buf,substr);
+					Parser::Find3uple(substr,x,y,z);
+					buf	=	buf.substr(k2+1);
+					
+					k1	=	buf.find("timemill");
+					if (k1 == std::string::npos)
+						throw error;
+					buf	=	buf.substr(k1);
+					Parser::ExtractMatch(buf,substr);
+					time	=	stof(substr);
+					m_vLight.back().vControlPoint.push_back(ControlPoint());
+					m_vLight.back().vControlPoint.back().position	=	glm::vec3(x,y,z);
+					m_vLight.back().vControlPoint.back().time		=	time;
+					
+				}
+				else
+				{
+					// For now only linear is supported
+				}
+			}
 		}
+		while(!input.eof());
+
+		// Everything goes well
+		m_state |= LIGHT_MASK;
 	}
-	// Everything goes well
-	m_state |= LIGHT_MASK;
 }
-void Loader::LoadDynamics(FileManager & file)
+void Loader::LoadDynamics()
 {
 	std::ifstream	input(m_lastfilename.c_str());
 }
