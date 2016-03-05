@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sstream>
 #include "utils/MemoryManager.hpp"
 #include <S3DE_Interpolate.hpp>
-#include "utils/Loader.h"
+#include <S3DE_Loader.h>
 #include <S3DE_Camera.h>
 #include <S3DE_CEntity.h>
 
