@@ -88,12 +88,12 @@ int main (int argc, char **argv)
 	{
 		config	=	loader.GetConfigData();
 
-		S3DE::EngineShader	shaderFilename	=	{"./Shader/texture.vert","./Shader/texture.frag","",""};
+		S3DE::EngineShader	shaderFilename	=	{"./Shader/lighting.vs","./Shader/lighting.fs","",""};
 		S3DE::EngineWindow	windowConf	=	{config.width,config.height,config.fullscreen,"Test Engine",32,2,3,2,shaderFilename};
 		
 		engine.CreateWindow(windowConf);
 		engine.ClearColor(0.0,0.0,0.0,1.0);
-		engine.SetCameraSettings(70.0, (float)config.width/(float)config.height, 0.01, 10000);
+		engine.SetCameraSettings(70.0, static_cast<float>(config.width)/config.height, 0.01, 10000);
 		engine.SetCameraLocation(config.position, config.target, config.up);
 
 		loader.Load("./data/obj.dat",S3DE::LoaderType::MESH);
