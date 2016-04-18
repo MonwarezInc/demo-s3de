@@ -36,6 +36,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <S3DE_Loader.h>
 #include <S3DE_Camera.h>
 #include <S3DE_CEntity.h>
+#include <S3DE_MeshManager.h>
 
 #define MAX_LIGHT 	6 	// define this for now
 #define	MAX_SPOT	2
@@ -61,7 +62,8 @@ int main (int argc, char **argv)
 	
 	// Input
 	S3DE::CInput	input;
-
+	// Manager system
+	S3DE::MeshManager	mesh_manager;
 	// loader system
 	S3DE::Loader	loader;
 	// Some struct for loader system
@@ -97,11 +99,36 @@ int main (int argc, char **argv)
 		engine.SetCameraLocation(config.position, config.target, config.up);
 
 		loader.Load("./data/obj.dat",S3DE::LoaderType::MESH);
-		pmeshdata	=	loader.GetMeshData();	
+		pmeshdata	=	loader.GetMeshData();
+		// Old way	remove mesh when transition is complete
 		BasicVectorManager<S3DE::Mesh>	mesh;
+		// CEntity vector
+		vector<S3DE::CEntity>	centity;
 		auto	nbModel	=	pmeshdata.size();
+		centity.reserve(nbModel);
+
 		mesh.Allocate(nbModel);
 		vIDMesh.resize(nbModel);
+		/*
+		for (auto &v: pmeshdata)
+		{
+			try
+			{	
+				centity.push_back(S3DE::CEntity(&mesh_manager));
+				centity.back().Load(v.filename);
+			}
+			catch(std::string const & a)
+			{
+				std::stringstream out;
+				out << "Exception caught when loading: " << v.filename ;
+				std::cerr << out.str() << std::endl << a << std::endl;
+			}
+			catch (...)
+			{
+				throw;
+			}
+		}
+		*/
 		for (size_t	i = 0; i < nbModel ; ++i)
 		{
 			unsigned int	id	=	0;
@@ -278,6 +305,7 @@ int main (int argc, char **argv)
 	{
 		std::cerr << "Unknow type of error" << std::endl;
 	}
+	
 	return EXIT_SUCCESS;
 }
 
