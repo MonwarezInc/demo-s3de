@@ -128,7 +128,7 @@ int main (int argc, char **argv)
 				throw;
 			}
 		}
-		*/
+		//*/
 		for (size_t	i = 0; i < nbModel ; ++i)
 		{
 			unsigned int	id	=	0;
