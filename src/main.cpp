@@ -57,13 +57,12 @@ using namespace std;
 int main (int argc, char **argv)
 {
 	cout << "Test engine " << endl;
-	
 	S3DE::CEngine	engine;
 	
 	// Input
 	S3DE::CInput	input;
 	// Manager system
-	S3DE::MeshManager	mesh_manager;
+	auto	mesh_manager	=	std::make_shared<S3DE::MeshManager>();
 	// loader system
 	S3DE::Loader	loader;
 	// Some struct for loader system
@@ -109,12 +108,12 @@ int main (int argc, char **argv)
 
 		mesh.Allocate(nbModel);
 		vIDMesh.resize(nbModel);
-		/*
+		//*
 		for (auto &v: pmeshdata)
 		{
 			try
 			{	
-				centity.push_back(S3DE::CEntity(&mesh_manager));
+				centity.push_back(S3DE::CEntity(mesh_manager));
 				centity.back().Load(v.filename);
 			}
 			catch(std::string const & a)
