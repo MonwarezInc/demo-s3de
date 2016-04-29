@@ -61,8 +61,8 @@ int main (int argc, char **argv)
 	
 	// Input
 	S3DE::CInput	input;
-	// Manager system
-	auto	mesh_manager	=	std::make_shared<S3DE::MeshManager>();
+	// Entity manager
+	S3DE::CEntity	centity;
 	// loader system
 	S3DE::Loader	loader;
 	// Some struct for loader system
@@ -101,20 +101,18 @@ int main (int argc, char **argv)
 		pmeshdata	=	loader.GetMeshData();
 		// Old way	remove mesh when transition is complete
 		BasicVectorManager<S3DE::Mesh>	mesh;
-		// CEntity vector
-		vector<S3DE::CEntity>	centity;
 		auto	nbModel	=	pmeshdata.size();
-		centity.reserve(nbModel);
 
 		mesh.Allocate(nbModel);
 		vIDMesh.resize(nbModel);
-		//*
+		#if 1
+		size_t	cnt	=	1;
 		for (auto &v: pmeshdata)
 		{
 			try
 			{	
-				centity.push_back(S3DE::CEntity(mesh_manager));
-				centity.back().Load(v.filename);
+				centity.Load(v.filename, "Entity number" + std::to_string (cnt));
+				++cnt;
 			}
 			catch(std::string const & a)
 			{
@@ -127,7 +125,7 @@ int main (int argc, char **argv)
 				throw;
 			}
 		}
-		//*/
+		#endif
 		for (size_t	i = 0; i < nbModel ; ++i)
 		{
 			unsigned int	id	=	0;

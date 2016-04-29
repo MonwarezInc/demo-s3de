@@ -8,4 +8,6 @@ bin/
 lib/
 *~
 .*~
-
+opengl.supp
+out.val
+test-valgrind
