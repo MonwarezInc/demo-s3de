@@ -105,14 +105,11 @@ int main (int argc, char **argv)
 
 		mesh.Allocate(nbModel);
 		vIDMesh.resize(nbModel);
-		#if 1
-		size_t	cnt	=	1;
 		for (auto &v: pmeshdata)
 		{
 			try
 			{	
-				centity.Load(v.filename, "Entity number" + std::to_string (cnt));
-				++cnt;
+				centity.Load(v.filename, v.entityName);
 			}
 			catch(std::string const & a)
 			{
@@ -125,7 +122,6 @@ int main (int argc, char **argv)
 				throw;
 			}
 		}
-		#endif
 		for (size_t	i = 0; i < nbModel ; ++i)
 		{
 			unsigned int	id	=	0;
