@@ -52,8 +52,14 @@ uniform float				matSpecularPower;
 uniform sampler2D 			text;
 // Output
 layout (location = 0) out vec4 out_Color; // for 330 and more
+// Function declaration
+vec4	CalcLightInternal(in BaseLight Light, in vec3 LightDirection,in vec3 Normal);
+vec4 	CalcDirectionalLight(in vec3 Normal);
+vec4	CalcPointLight(in PointLight pl, in vec3 Normal);
+vec4	CalcSpotLight(in SpotLight	sl, in vec3 Normal);
 
-vec4	CalcLightInternal(BaseLight Light, vec3 LightDirection, vec3 Normal)
+// Implementation
+vec4	CalcLightInternal(in BaseLight Light, in vec3 LightDirection,in vec3 Normal)
 {
 	
 	// Ambient color
@@ -77,11 +83,11 @@ vec4	CalcLightInternal(BaseLight Light, vec3 LightDirection, vec3 Normal)
 	
 	return (ambientColor + diffuseColor + specularColor);
 }
-vec4 	CalcDirectionalLight(vec3 Normal)
+vec4 	CalcDirectionalLight(in vec3 Normal)
 {
 	return CalcLightInternal(directionalLight.Base, directionalLight.Direction, Normal);
 }
-vec4	CalcPointLight(PointLight pl, vec3 Normal)
+vec4	CalcPointLight(in PointLight pl, in vec3 Normal)
 {
 	vec3	LightDirection	=	WorldPos0 - pl.Position;
 	float	Distance		=	length(LightDirection);
@@ -92,7 +98,7 @@ vec4	CalcPointLight(PointLight pl, vec3 Normal)
 								pl.Atten.Exp * Distance * Distance;
 	return	Color/atten;	
 }
-vec4	CalcSpotLight(SpotLight	sl, vec3 Normal)
+vec4	CalcSpotLight(in SpotLight	sl, in vec3 Normal)
 {
 	vec3	LightToPixel	=	normalize(WorldPos0 - sl.Base.Position);
 	float	SpotFactor		=	dot(LightToPixel, sl.Direction);
