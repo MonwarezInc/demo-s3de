@@ -89,7 +89,7 @@ int main (int argc, char **argv)
 	{
 		config	=	loader.GetConfigData();
 
-		S3DE::EngineShader	shaderFilename	=	{"./Shader/lighting.vs","./Shader/lighting.fs","",""};
+		S3DE::EngineShader	shaderFilename	=	{"./Shader/lighting.vs","./Shader/lighting.fs","./Shader/lighting.gs","",""};
 		S3DE::EngineWindow	windowConf	=	{config.width,config.height,config.fullscreen,"Test Engine",32,2,3,2,shaderFilename};
 		
 		engine.CreateWindow(windowConf);

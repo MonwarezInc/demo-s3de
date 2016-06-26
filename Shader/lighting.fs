@@ -5,7 +5,7 @@ const int MAX_POINT_LIGHTS 	= 	36;
 const int MAX_SPOT_LIGHTS	=	2;
 //Input 
 
-in vec2 coordTexture;
+in vec2 CoordTexture;
 in vec3	Normal0;
 in vec3	WorldPos0;
 
@@ -125,7 +125,7 @@ void main()
 	for (int i = 0; (i < NumSpotLights) && (i < MAX_SPOT_LIGHTS); ++i)
 		TotalLight	+= CalcSpotLight(SpotLights[i], Normal);
 
-	out_Color	=	texture2D(text,coordTexture.xy)*TotalLight;
+	out_Color	=	texture2D(text,CoordTexture.xy)*TotalLight;
 	
 }
 

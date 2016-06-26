@@ -16,9 +16,12 @@ uniform int		skinned;
 uniform mat4	projection;
 uniform mat4	modelview;
 // output
-out 	vec2	coordTexture;
-out		vec3	WorldPos0;
-out		vec3	Normal0;
+out VertexAttrib
+{
+ 	vec2	CoordTexture;
+	vec3	WorldPos0;
+	vec3	Normal0;
+}vertex;
 void	main()
 {
 	if (skinned == 1)
@@ -38,8 +41,8 @@ void	main()
 	gl_Position	=	MVP * vec4(in_Vertex,1.0);
 	}
 	// output
-	coordTexture	=	in_TexCoord0;
-	Normal0			=	(modelview * vec4(in_Normal,0.0)).xyz;
-	WorldPos0		=	(modelview * vec4(in_Vertex,1.0)).xyz;
+	vertex.CoordTexture		=	in_TexCoord0;
+	vertex.Normal0			=	(modelview * vec4(in_Normal,0.0)).xyz;
+	vertex.WorldPos0		=	(modelview * vec4(in_Vertex,1.0)).xyz;
 }
 
