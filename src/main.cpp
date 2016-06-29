@@ -24,19 +24,20 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#include <iostream>
 #include <S3DE_Engine-main.h>
 #include <S3DE_Mesh.h>
-
-#include <cstdio>
-#include <cmath>
-#include <sstream>
-#include "utils/MemoryManager.hpp"
 #include <S3DE_Interpolate.hpp>
 #include <S3DE_Loader.h>
 #include <S3DE_Camera.h>
 #include <S3DE_CEntity.h>
 #include <S3DE_MeshManager.h>
+
+#include "utils/MemoryManager.hpp"
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <sstream>
+#include <map>
 
 #define MAX_LIGHT 	6 	// define this for now
 #define	MAX_SPOT	2
@@ -46,12 +47,14 @@ struct IdMesh
 	{
 		id		=	0;
 		isGood	=	false;
+		animation	=	"idle";
 	}
 	unsigned	int	id;
 	bool			isGood;
 	glm::vec3	position;
 	glm::vec3	pitch;
 	float		scale;
+	std::string animation;
 };
 using namespace std;
 int main (int argc, char **argv)
@@ -85,6 +88,8 @@ int main (int argc, char **argv)
 		std::cerr << a << std::endl;
 	}
 	std::vector<IdMesh>			vIDMesh;
+	// A map for entityName and id
+	std::map<std::string, unsigned int> idFromName;
 	try
 	{
 		config	=	loader.GetConfigData();
@@ -136,8 +141,11 @@ int main (int argc, char **argv)
 				vIDMesh[i].pitch	=	pmeshdata[i].pitch;
 				vIDMesh[i].scale	=	pmeshdata[i].scale;
 
+				idFromName[pmeshdata[i].entityName]	=	i;
+
 				engine.SetNodePosRot(vIDMesh[i].id, vIDMesh[i].position, vIDMesh[i].pitch);
 				engine.SetNodeScale(vIDMesh[i].id, vIDMesh[i].scale);
+				engine.SetNodeAnimation(vIDMesh[i].id, vIDMesh[i].animation);
 			}
 			catch(std::string const & a)
 			{
@@ -221,6 +229,19 @@ int main (int argc, char **argv)
 		engine.AttachLight(spotlight);
 		// End adding some light
 		float	t	=	0;
+		// Animation settings example
+		// It could be a good idea to have a loader animation file
+		// so that we could bind some animation with action
+		// and also adding some IA for moving character.
+		try
+		{
+			// Simply use maps: entityName with vIDMesh
+			vIDMesh[idFromName.at("boblamp001")].animation	=	"idle";
+		}
+		catch (...)
+		{
+			std::cerr << "Error with idFromName " << std::endl;
+		}
 		while (!input.terminer()) 
 		{
 			if (vIDMesh.size() > 9)
@@ -229,8 +250,12 @@ int main (int argc, char **argv)
 			}
 			for (auto & meshid: vIDMesh)
 			{
+				// Maybe need to do a function for that
+				// It will depend if I keep those in engine
+				// or if I move them to CEntity
 				engine.SetNodePosRot(meshid.id, meshid.position, meshid.pitch);
 				engine.SetNodeScale(meshid.id, meshid.scale);
+				engine.SetNodeAnimation(meshid.id,meshid.animation);
 			}
 			auto numLight	=	pointlight.size();
 			for (size_t i = 0; i < numLight; ++i)

@@ -1,5 +1,5 @@
 //GLSL version
-#version 150
+#version 150 core
 #extension GL_ARB_explicit_attrib_location : require
 const int MAX_POINT_LIGHTS 	= 	36;
 const int MAX_SPOT_LIGHTS	=	2;

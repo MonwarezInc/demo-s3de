@@ -1,5 +1,5 @@
 // GLSL version
-#version 150
+#version 150 core
 #extension GL_ARB_explicit_attrib_location : require
 // vertex input
 layout (location = 0) 	in 		vec3	in_Vertex;
