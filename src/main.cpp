@@ -160,6 +160,7 @@ int main (int argc, char **argv)
 		}
 		S3DE::Camera	camera(config.position,config.target,config.up);
 		// maybe we should encapsulate timer 
+		// or use std::chrono instead of SDL one
 		unsigned int 	start		=	SDL_GetTicks();
 		unsigned int 	frametime	=	16;
 		unsigned int	elapsed		=	0;
@@ -244,9 +245,10 @@ int main (int argc, char **argv)
 		}
 		while (!input.terminer()) 
 		{
-			if (vIDMesh.size() > 9)
+			auto itBall	= idFromName.find("ball001");
+			if (itBall != idFromName.end())
 			{
-				vIDMesh[9].pitch	=	glm::vec3(t,0,0);
+				vIDMesh[itBall->second].pitch	=	glm::vec3(t,0,0);
 			}
 			for (auto & meshid: vIDMesh)
 			{
