@@ -36,11 +36,6 @@ add_executable(
 target_link_libraries(
 	TestEngine
 	Simple3DEngine
-	${GL}
-	SDL2
-	SDL2_image
-	GLEW
-	assimp
 )
 if(UNIX)
 	include(FindPkgConfig)
