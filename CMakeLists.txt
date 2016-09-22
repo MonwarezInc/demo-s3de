@@ -18,7 +18,7 @@ file(
 	source_file
 	src/*
 )
-set(Extra_CXX_Flags "-Wall -std=c++1y")
+set(Extra_CXX_Flags "-Wall -std=c++14")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Extra_CXX_Flags}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(GL GL)
