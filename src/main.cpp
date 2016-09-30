@@ -162,7 +162,6 @@ int main (int argc, char **argv)
 		// maybe we should encapsulate timer 
 		// or use std::chrono instead of SDL one
 		unsigned int 	start		=	SDL_GetTicks();
-		unsigned int 	frametime	=	16;
 		unsigned int	elapsed		=	0;
 		unsigned int	totalTime	=	SDL_GetTicks() - start;
 		input.GrabCursor(true);
@@ -302,11 +301,6 @@ int main (int argc, char **argv)
 					
 			}
 			elapsed = SDL_GetTicks() - begin;
-			if (elapsed < frametime)
-				{
-					SDL_Delay(frametime - elapsed);
-					elapsed	=	SDL_GetTicks() - begin;
-				}
 			if (input.GetTouche(SDL_SCANCODE_ESCAPE))
 				break;
 		totalTime	=	SDL_GetTicks() - start;
