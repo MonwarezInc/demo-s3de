@@ -29,8 +29,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <string>
 #include <vector>
-
-// BasicMemoryManager
+#include <S3DE_Mesh.h>
+namespace S3DE
+{
 template <class T>
 class BasicVectorManager
 {
@@ -68,3 +69,13 @@ class BasicVectorManager
 	protected:
 		std::vector<std::unique_ptr<T>>	m_pVect;
 };
+class BasicMeshManager : public BasicVectorManager<Mesh>
+{
+	public:
+		BasicMeshManager();
+		BasicMeshManager(size_t nb);
+
+	protected:
+};
+
+}

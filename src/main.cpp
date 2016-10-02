@@ -103,7 +103,7 @@ int main (int argc, char **argv)
 		loader.Load("./data/obj.dat",S3DE::LoaderType::MESH);
 		pmeshdata	=	loader.GetMeshData();
 		// Old way	remove mesh when transition is complete
-		BasicVectorManager<S3DE::Mesh>	mesh;
+		S3DE::BasicVectorManager<S3DE::Mesh>	mesh;
 		auto	nbModel	=	pmeshdata.size();
 
 		mesh.Allocate(nbModel);
