@@ -29,10 +29,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <S3DE_Interpolate.hpp>
 #include <S3DE_Loader.h>
 #include <S3DE_Camera.h>
-#include <S3DE_CEntity.h>
 #include <S3DE_MeshManager.h>
 
-#include "utils/MemoryManager.hpp"
 #include <iostream>
 #include <cstdio>
 #include <cmath>
@@ -43,11 +41,10 @@ struct IdMesh
 {
 	IdMesh()
 	{
-		id		=	0;
 		isGood	=	false;
 		animation	=	"idle";
 	}
-	unsigned	int	id;
+	std::string		entity;
 	bool			isGood;
 	glm::vec3	position;
 	glm::vec3	pitch;
@@ -62,8 +59,6 @@ int main (int argc, char **argv)
 	
 	// Input
 	S3DE::CInput	input;
-	// Entity manager
-	S3DE::CEntity	centity;
 	// loader system
 	S3DE::Loader	loader;
 	// Some struct for loader system
@@ -103,16 +98,16 @@ int main (int argc, char **argv)
 		loader.Load("./data/obj.dat",S3DE::LoaderType::MESH);
 		pmeshdata	=	loader.GetMeshData();
 		// Old way	remove mesh when transition is complete
-		S3DE::BasicVectorManager<S3DE::Mesh>	mesh;
 		auto	nbModel	=	pmeshdata.size();
 
-		mesh.Allocate(nbModel);
-		vIDMesh.resize(nbModel);
+		std::vector<S3DE::MeshPair>	meshpair;
+		meshpair.reserve(nbModel);
 		for (auto &v: pmeshdata)
 		{
 			try
 			{	
-				centity.Load(v.filename, v.entityName);
+				S3DE::MeshPair	pair	=	{v.entityName, v.filename};
+				meshpair.push_back(pair);
 			}
 			catch(std::string const & a)
 			{
@@ -125,25 +120,24 @@ int main (int argc, char **argv)
 				throw;
 			}
 		}
-		for (size_t	i = 0; i < nbModel ; ++i)
+
+		engine.AddMesh(meshpair);
+		meshpair.clear();
+		vIDMesh.resize(nbModel);
+		for (size_t i=0; i < pmeshdata.size(); ++i)
 		{
-			unsigned int	id	=	0;
-			auto mesh_ptr	=	mesh.GetVectPtr(i);
 			try
 			{
-				mesh_ptr->LoadFromFile(pmeshdata[i].filename);
-				engine.AddMeshNode(mesh_ptr, id);
-				vIDMesh[i].id		=	id;
-				vIDMesh[i].isGood	=	true;
+				vIDMesh[i].entity	=	pmeshdata[i].entityName;
 				vIDMesh[i].position	=	pmeshdata[i].position;
 				vIDMesh[i].pitch	=	pmeshdata[i].pitch;
 				vIDMesh[i].scale	=	pmeshdata[i].scale;
 
-				idFromName[pmeshdata[i].entityName]	=	i;
+				idFromName[vIDMesh[i].entity] = i;
 
-				engine.SetNodePosRot(vIDMesh[i].id, vIDMesh[i].position, vIDMesh[i].pitch);
-				engine.SetNodeScale(vIDMesh[i].id, vIDMesh[i].scale);
-				engine.SetNodeAnimation(vIDMesh[i].id, vIDMesh[i].animation);
+				engine.SetNodePosRot(vIDMesh[i].entity, vIDMesh[i].position, vIDMesh[i].pitch);
+				engine.SetNodeScale(vIDMesh[i].entity,vIDMesh[i].scale);
+				engine.SetNodeAnimation(vIDMesh[i].entity, vIDMesh[i].animation);
 			}
 			catch(std::string const & a)
 			{
@@ -240,6 +234,7 @@ int main (int argc, char **argv)
 		try
 		{
 			// Simply use maps: entityName with vIDMesh
+			
 			vIDMesh[idFromName.at("boblamp001")].animation	=	"idle";
 		}
 		catch (...)
@@ -258,9 +253,9 @@ int main (int argc, char **argv)
 				// Maybe need to do a function for that
 				// It will depend if I keep those in engine
 				// or if I move them to CEntity
-				engine.SetNodePosRot(meshid.id, meshid.position, meshid.pitch);
-				engine.SetNodeScale(meshid.id, meshid.scale);
-				engine.SetNodeAnimation(meshid.id,meshid.animation);
+				engine.SetNodePosRot(meshid.entity, meshid.position, meshid.pitch);
+				engine.SetNodeScale(meshid.entity, meshid.scale);
+				engine.SetNodeAnimation(meshid.entity,meshid.animation);
 			}
 			auto numLight	=	pointlight.size();
 			for (size_t i = 0; i < numLight; ++i)
@@ -294,10 +289,10 @@ int main (int argc, char **argv)
 						break;
 					case	S3DE::MeshExceptFlag::RELEASE:
 						// Do somethings
-						std::cerr << "Release the node mesh id:" << re.id << std::endl;
-						engine.DelMeshNode(re.id);
-						if (re.id < vIDMesh.size())
-							vIDMesh[re.id].isGood	=	false;
+						//std::cerr << "Release the node mesh id:" << re.id << std::endl;
+						//engine.DelMeshNode(re.id);
+						//if (re.id < vIDMesh.size())
+						//	vIDMesh[re.id].isGood	=	false;
 						break;
 					default:
 						throw me;
