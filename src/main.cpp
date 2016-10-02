@@ -39,8 +39,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sstream>
 #include <map>
 
-#define MAX_LIGHT 	6 	// define this for now
-#define	MAX_SPOT	2
 struct IdMesh
 {
 	IdMesh()
@@ -173,6 +171,12 @@ int main (int argc, char **argv)
 		std::vector<S3DE::PointLight>				pointlight;
 		std::vector<S3DE::LinearInterpolate<float>>	posintlight;
 		std::vector<S3DE::SpotLight>				spotlight;
+		// 	For the moment the moment, the engine have fixed max number 
+		//	of light, MAX_LIGHT is for regular light
+		//	also MAX_SPOT will be for spot light
+		//	For now no need to specify MAX_SPOT since there is no loop
+		//	for it.
+		const unsigned int MAX_LIGHT= 	6; 
 		try
 		{
 			loader.Load("./data/light.dat", S3DE::LoaderType::LIGHT);

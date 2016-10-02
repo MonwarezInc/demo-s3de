@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef MemoryManager_H_INCLUED
-#define MemoryManager_H_INCLUED
+#pragma once
 #include <memory>
 #include <stdio.h>
 #include <string>
@@ -69,4 +68,3 @@ class BasicVectorManager
 	protected:
 		std::vector<std::unique_ptr<T>>	m_pVect;
 };
-#endif
