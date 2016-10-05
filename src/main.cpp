@@ -36,6 +36,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cmath>
 #include <sstream>
 #include <map>
+#include <chrono>
 
 struct IdMesh
 {
@@ -71,7 +72,7 @@ int main (int argc, char **argv)
 	config.width		=	640;
 	config.height		=	480;
 	config.fullscreen	=	false;
-
+	auto	start		=	std::chrono::high_resolution_clock::now();
 	try
 	{
 		loader.Load("./data/config",S3DE::LoaderType::CONFIG);
@@ -151,11 +152,9 @@ int main (int argc, char **argv)
 			}
 		}
 		S3DE::Camera	camera(config.position,config.target,config.up);
-		// maybe we should encapsulate timer 
-		// or use std::chrono instead of SDL one
-		unsigned int 	start		=	SDL_GetTicks();
-		unsigned int	elapsed		=	0;
-		unsigned int	totalTime	=	SDL_GetTicks() - start;
+		// set chrono timer
+		auto	totalTime	=	std::chrono::high_resolution_clock::now() - start;
+		auto	elapsed		=	totalTime - totalTime;
 		input.GrabCursor(true);
 		input.ShowCursor(false);	
 		
@@ -261,7 +260,7 @@ int main (int argc, char **argv)
 			for (size_t i = 0; i < numLight; ++i)
 			{
 				// Apply Interpolated curve position
-				auto	lightpos	=	posintlight[i].GetInterpolated(totalTime);
+				auto	lightpos	=	posintlight[i].GetInterpolated((std::chrono::duration_cast<std::chrono::milliseconds>(totalTime)).count());
 				pointlight[i].Position	=	lightpos;	
 			}
 			engine.AttachLight(pointlight);
@@ -269,7 +268,7 @@ int main (int argc, char **argv)
 			input.UpdateEvent();
 			camera.KeyBoardEvent(input);	
 			camera.Move(input,elapsed);
-			unsigned int begin = SDL_GetTicks();
+			auto	begin = std::chrono::high_resolution_clock::now();
 			// do graphical stuff
 			// do animation 
 			engine.SetCameraLocation(camera.GetPosition(),camera.GetTarget(),config.up);
@@ -299,11 +298,11 @@ int main (int argc, char **argv)
 				}
 					
 			}
-			elapsed = SDL_GetTicks() - begin;
+			elapsed = std::chrono::high_resolution_clock::now() - begin;
 			if (input.GetTouche(SDL_SCANCODE_ESCAPE))
 				break;
-		totalTime	=	SDL_GetTicks() - start;
-		t	+=	elapsed/1800.0;
+		totalTime	=	std::chrono::high_resolution_clock::now() - start;
+		t	+=	(std::chrono::duration_cast<std::chrono::milliseconds>(elapsed)).count()/1800.0;
 		}
 	}
 	catch(string const &a)
