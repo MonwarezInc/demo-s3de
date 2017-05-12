@@ -162,7 +162,8 @@ int main (int argc, char **argv)
 		// Adding some light
 		std::vector<S3DE::LightData>				lightdata;
 		std::vector<S3DE::PointLight>				pointlight;
-		std::vector<S3DE::LinearInterpolate<float>>	posintlight;
+                // TODO: Implement a CurveManager
+		std::vector<std::shared_ptr<S3DE::CurveInterpolate<float>>> posintlight;
 		std::vector<S3DE::SpotLight>				spotlight;
 		// 	For the moment the moment, the engine have fixed max number 
 		//	of light, MAX_LIGHT is for regular light
@@ -187,12 +188,12 @@ int main (int argc, char **argv)
 				if (lightdata[i].controltype	==	"linear")
 				{
 					size_t controlpoint	=	lightdata[i].vControlPoint.size();
-					posintlight.push_back(S3DE::LinearInterpolate<float>());
+					posintlight.push_back(std::make_shared<S3DE::CurveInterpolate<float>>(S3DE::CurveType::Linear));
 					for (size_t j = 0; j < controlpoint; ++j)
 					{
 						auto vec	=	lightdata[i].vControlPoint[j].position;
 						glm::vec3	position(vec.x,vec.y,vec.z);
-						posintlight.back().AddPoint(position, lightdata[i].vControlPoint[j].time);
+						posintlight.back()->AddPoint(position, lightdata[i].vControlPoint[j].time);
 					}
 				}
 				else	// throw except
@@ -200,7 +201,7 @@ int main (int argc, char **argv)
 					throw string ("Error: ") + lightdata[i].controltype + string(" curve not implemented");
 				}
 				// Set looped for beginning
-				posintlight.back().SetLooped(true);
+				posintlight.back()->SetClosed(true);
 				pointlight.push_back(pl);
 			}
 			// Spot Light one for now
@@ -260,7 +261,7 @@ int main (int argc, char **argv)
 			for (size_t i = 0; i < numLight; ++i)
 			{
 				// Apply Interpolated curve position
-				auto	lightpos	=	posintlight[i].GetInterpolated((std::chrono::duration_cast<std::chrono::milliseconds>(totalTime)).count());
+				auto	lightpos	=	posintlight[i]->GetInterpolated((std::chrono::duration_cast<std::chrono::milliseconds>(totalTime)).count());
 				pointlight[i].Position	=	lightpos;	
 			}
 			engine.AttachLight(pointlight);
