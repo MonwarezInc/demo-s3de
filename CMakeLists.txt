@@ -19,10 +19,9 @@ link_directories(${CMAKE_PREFIX}/lib)
 option(asan "Build with asan enabled" ON)
 
 #Generate source file list
-file(
-    GLOB_RECURSE
+set(
     source_file
-    src/*
+    src/main.cpp
 )
 set(Extra_CXX_Flags "-Wall -std=c++1z")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Extra_CXX_Flags}")

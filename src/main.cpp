@@ -24,12 +24,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#include <S3DE_Camera.h>
-#include <S3DE_Engine-main.h>
-#include <S3DE_Interpolate.hpp>
-#include <S3DE_Loader.h>
-#include <S3DE_Mesh.h>
-#include <S3DE_MeshManager.h>
+#include <engine/Camera.h>
+#include <engine/Engine-main.h>
+#include <engine/Mesh.h>
+#include <engine/MeshManager.h>
+#include <tools/Interpolate.hpp>
+#include <tools/Loader.h>
 
 #include <chrono>
 #include <cmath>
