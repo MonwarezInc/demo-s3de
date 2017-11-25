@@ -12,3 +12,6 @@ lib/
 opengl.supp
 out.val
 test-valgrind
+subprojects/packagecache
+subprojects/simple3dengine
+subprojects/googletest-release-*

@@ -1,0 +1,5 @@
+[wrap-git]
+directory = simple3dengine
+url=https://gitlab.com/MonwarezInc/Simple3DEngine.git
+revision=head
+
