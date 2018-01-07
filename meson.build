@@ -6,6 +6,7 @@ assimp_dep = dependency('assimp',required:true)
 glew_dep = dependency('glew',required:true)
 glm_dep = dependency('glm',required:true)
 
+
 simple3dengine_dep = dependency('simple3dengine',fallback : ['simple3dengine','simple3dengine_dep'])
 
 executable('DemoSimple3DEngine','src/main.cpp',
@@ -17,3 +18,4 @@ executable('DemoSimple3DEngine','src/main.cpp',
                    simple3dengine_dep])
 
 
+cppcheck_target = run_target('cppcheck.demo',command : ['tools/cppcheck.sh'])
