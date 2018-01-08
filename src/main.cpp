@@ -90,15 +90,8 @@ int main( int argc, char **argv )
 
         S3DE::EngineShader shaderFilename
             = {"./Shader/lighting.vs", "./Shader/lighting.fs", "./Shader/lighting.gs", "", ""};
-        S3DE::EngineWindow windowConf = {static_cast<int>( config.width ),
-                                         static_cast<int>( config.height ),
-                                         config.fullscreen,
-                                         "Test Engine",
-                                         32,
-                                         2,
-                                         3,
-                                         2,
-                                         shaderFilename};
+        S3DE::EngineWindow windowConf
+            = {config.width, config.height, config.fullscreen, "Test Engine", 3, 2, shaderFilename};
 
         engine.CreateWindow( windowConf );
         engine.ClearColor( 0.0, 0.0, 0.0, 1.0 );
