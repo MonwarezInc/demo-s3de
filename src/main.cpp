@@ -246,12 +246,34 @@ int main( int argc, char **argv )
         {
             std::cerr << "Error with idFromName " << std::endl;
         }
+
+        glm::vec3 ballOriginPosition{};
+        glm::vec3 radiusVec{3., 0., 0.};
+        auto itBall = idFromName.find( "ball001" );
+        if ( itBall != idFromName.end() )
+        {
+            ballOriginPosition = vIDMesh[ itBall->second ].position;
+        }
+
         while ( !input.terminer() )
         {
-            auto itBall = idFromName.find( "ball001" );
+            // we assume that object structure does not change
+            // auto itBall = idFromName.find( "ball001" );
             if ( itBall != idFromName.end() )
             {
-                vIDMesh[ itBall->second ].pitch = glm::vec3( t, 0, 0 );
+                vIDMesh[ itBall->second ].pitch = glm::vec3( t, -t, 0 );
+
+                auto rotateMatrix = glm::rotate( glm::mat4{}, t, glm::vec3{0.f, 0.f, 1.f} );
+
+                auto rotatedRadius = rotateMatrix * glm::vec4{radiusVec, 1.};
+
+                glm::vec3 finalRadius{};
+                for ( std::size_t iDim = 0u; iDim < 3; ++iDim )
+                {
+                    finalRadius[ iDim ] = rotatedRadius[ iDim ];
+                }
+
+                vIDMesh[ itBall->second ].position = ballOriginPosition + finalRadius;
             }
             for ( auto &meshid : vIDMesh )
             {
