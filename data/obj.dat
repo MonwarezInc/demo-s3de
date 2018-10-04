@@ -14,3 +14,4 @@
 ../demo-data/data/table/table.obj table001 position(-30,40,11) rotate(0,0,90) scale(1)
 ../demo-data/data/ball/ball.obj ball001 position(-25,65,11) rotate(0,0,0) scale(1)
 ../demo-data/data/chair/chair.obj chair001 position(-30,42,12.4) rotate(90,0,0) scale(1.5)
+../data/bunnyLowPoly.obj bunny position(-20,65,13) rotate(90,0,0) scale(5)

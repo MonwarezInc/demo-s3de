@@ -30,6 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <engine/MeshManager.h>
 #include <tools/Interpolate.hpp>
 #include <tools/Loader.h>
+#include <window/sdl2/SDL2GLWindow.h>
 
 #include <chrono>
 #include <cmath>
@@ -56,7 +57,7 @@ using namespace std;
 int main( int argc, char **argv )
 {
     cout << "Test engine " << endl;
-    S3DE::CEngine engine;
+    S3DE::CEngine<S3DE::SDL2GLWindow> engine;
 
     // Input
     S3DE::CInput input;
