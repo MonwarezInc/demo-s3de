@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <engine/Engine-main.h>
 #include <engine/Mesh.h>
 #include <engine/MeshManager.h>
+#include <misc/Input.h>
 #include <tools/Interpolate.hpp>
 #include <tools/Loader.h>
 #include <window/sdl2/SDL2GLWindow.h>
@@ -53,11 +54,17 @@ struct IdMesh
     float scale;
     std::string animation;
 };
+
+class SceneGraph
+{
+};
+
 using namespace std;
 int main( int argc, char **argv )
 {
     cout << "Test engine " << endl;
-    S3DE::CEngine<S3DE::SDL2GLWindow> engine;
+    SceneGraph sceneGraph;
+    S3DE::Engine<S3DE::SDL2GLWindow, SceneGraph> engine{sceneGraph};
 
     // Input
     S3DE::CInput input;
@@ -156,7 +163,13 @@ int main( int argc, char **argv )
                 throw;
             }
         }
-        S3DE::Camera camera( config.position, config.target, config.up );
+        S3DE::CameraKey<SDL_Scancode> cameraKey;
+        cameraKey.forward  = SDL_SCANCODE_W;
+        cameraKey.backward = SDL_SCANCODE_S;
+        cameraKey.left     = SDL_SCANCODE_A;
+        cameraKey.right    = SDL_SCANCODE_D;
+        S3DE::Camera<S3DE::CInput, SDL_Scancode> camera( cameraKey, config.position, config.target,
+                                                         config.up );
         // set chrono timer
         auto totalTime = std::chrono::high_resolution_clock::now() - start;
         auto elapsed   = totalTime - totalTime;
