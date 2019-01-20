@@ -15,7 +15,10 @@ executable('DemoSimple3DEngine','src/main.cpp',
                    assimp_dep,
                    glew_dep,
                    glm_dep,
-                   simple3dengine_dep])
+                   simple3dengine_dep],
+
+    cpp_args: ['-DS3DE_USE_DSA=1'],
+          )
 
 
 cppcheck_target = run_target('cppcheck.demo',command : ['tools/cppcheck.sh'])
