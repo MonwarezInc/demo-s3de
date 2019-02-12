@@ -1,4 +1,6 @@
 # demo-s3de
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FMonwarezInc%2Fdemo-s3de.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FMonwarezInc%2Fdemo-s3de?ref=badge_shield)
+
 Here is a demo of S3DE <br />
 It suppose that S3DE is compiled somewhere <br/>
 use lib_s3de and include_s3de to point to the include and lib of S3DE. <br />
@@ -27,3 +29,7 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND<br/>
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT<br/>
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS<br/>
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.<br/>
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FMonwarezInc%2Fdemo-s3de.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FMonwarezInc%2Fdemo-s3de?ref=badge_large)
