@@ -1,4 +1,5 @@
 # demo-s3de
+![BUILD Status](https://gitlab.com/MonwarezInc/demo-s3de/badges/master/build.svg)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FMonwarezInc%2Fdemo-s3de.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FMonwarezInc%2Fdemo-s3de?ref=badge_shield)
 
 Here is a demo of S3DE <br />
