@@ -10,4 +10,4 @@ executable('DemoSimple3DEngine',
           )
 
 
-cppcheck_target = run_target('cppcheck.demo',command : ['tools/cppcheck.sh'])
+cppcheck_target = run_target('cppcheck',command : ['tools/cppcheck.sh'])

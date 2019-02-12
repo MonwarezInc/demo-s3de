@@ -1,0 +1,14 @@
+stages:
+  - build
+
+build:clang:
+  stage: build
+  script:
+    - ./tools/ci/clang.sh
+  image: monwarez/simple3dengine:latest
+
+build:gcc:
+  stage: build
+  script:
+    - ./tools/ci/gcc.sh
+  image: monwarez/simple3dengine:latest

@@ -15,3 +15,4 @@ test-valgrind
 subprojects/packagecache
 subprojects/simple3dengine
 subprojects/googletest-release-*
+subprojects/range-v3-0.3.6
