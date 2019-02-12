@@ -3,8 +3,7 @@
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FMonwarezInc%2Fdemo-s3de.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FMonwarezInc%2Fdemo-s3de?ref=badge_shield)
 
 Here is a demo of S3DE <br />
-It suppose that S3DE is compiled somewhere <br/>
-use lib_s3de and include_s3de to point to the include and lib of S3DE. <br />
+If it cannot found Simple3DEngine, it will download it.<br />
 
 Copyright (c) 2016, Payet Thibault<br/>
 All rights reserved.<br/>
