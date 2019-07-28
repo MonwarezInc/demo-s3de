@@ -330,10 +330,12 @@ int main( int argc, char **argv )
                     case S3DE::MeshExceptFlag::FATAL: throw me; break;
                     case S3DE::MeshExceptFlag::RELEASE:
                         // Do somethings
-                        // std::cerr << "Release the node mesh id:" << re.id << std::endl;
-                        // engine.DelMeshNode(re.id);
-                        // if (re.id < vIDMesh.size())
-                        //  vIDMesh[re.id].isGood   =   false;
+                         std::cerr << "Release the node mesh id:" << re.id << std::endl;
+                         //engine.DelMeshNode(re.id);
+                         if (re.id < vIDMesh.size())
+                         {
+                          vIDMesh[re.id].isGood   =   false;
+                         }
                         break;
                     default: throw me;
                 }
