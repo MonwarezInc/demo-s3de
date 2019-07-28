@@ -24,14 +24,14 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#include <engine/Camera.h>
-#include <engine/Engine-main.h>
-#include <engine/Mesh.h>
-#include <engine/MeshManager.h>
-#include <misc/Input.h>
-#include <tools/Interpolate.hpp>
-#include <tools/Loader.h>
-#include <window/sdl2/SDL2GLWindow.h>
+#include "Camera.h"
+#include "Engine-main.h"
+#include "Input.h"
+#include "Interpolate.hpp"
+#include "Loader.h"
+#include "Mesh.h"
+#include "MeshManager.h"
+#include "SDL2GLWindow.h"
 
 #include <chrono>
 #include <cmath>
@@ -330,12 +330,12 @@ int main( int argc, char **argv )
                     case S3DE::MeshExceptFlag::FATAL: throw me; break;
                     case S3DE::MeshExceptFlag::RELEASE:
                         // Do somethings
-                         std::cerr << "Release the node mesh id:" << re.id << std::endl;
-                         //engine.DelMeshNode(re.id);
-                         if (re.id < vIDMesh.size())
-                         {
-                          vIDMesh[re.id].isGood   =   false;
-                         }
+                        std::cerr << "Release the node mesh id:" << re.id << std::endl;
+                        // engine.DelMeshNode(re.id);
+                        if ( re.id < vIDMesh.size() )
+                        {
+                            vIDMesh[ re.id ].isGood = false;
+                        }
                         break;
                     default: throw me;
                 }
