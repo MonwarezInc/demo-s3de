@@ -15,3 +15,5 @@
 ../demo-data/data/ball/ball.obj ball001 position(-25,65,11) rotate(0,0,0) scale(1)
 ../demo-data/data/chair/chair.obj chair001 position(-30,42,12.4) rotate(90,0,0) scale(1.5)
 ../data/bunnyLowPoly.obj bunny position(-20,65,13) rotate(90,0,0) scale(5)
+../data/beer/14043_16_oz._Beer_Bottle_v1_l3.obj beer position(-30,40,14) rotate(0,0,0) scale(0.1)
+#../data/cethiels_dragon_3d/dragon-2_79b.fbx drogo position(-20,75,13) rotate(90,0,0) scale(5)
